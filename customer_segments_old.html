@@ -12150,7 +12150,7 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>I attempted to predict Delicatessen.  It seems that the model failed to fit the data, as the r2 was negative.  The reported score was -0.57.  This implies the data outside of delicatessen is not helpful in predicting it.  Given that information, it means that Deli is a neccessary feature for identifying customers.  If it were easily predicted, then it would not be as relevant for segmenting customers, since we could just use other data.</p>
+<p>I attempted to predict Delicatessen.  It seems that the model failed to fit the data, as the r2 was negative.  The reported score was -0.57.  This implies the data outside of delicatessen is not helpful in predicting it.</p>
 
 </div>
 </div>
@@ -13948,7 +13948,7 @@ Ny7+WPF7swAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Grocery and detergents_paper look pretty linearly correlated, implying that as one increases, so does another.  Looking at the row for Delicatessen, there doesn't appear to be a relationship with any of the other pairs, which explains with the model was unable to fit the data.  Pretty much all of the data is heavily right skewed, with a majority of the points on the left end of the distribution, and a long right tail.</p>
+<p>Grocery and detergents_paper look pretty linearly correlated, implying that as one increases, so does another.  Looking at the row for Delicatessen, there doesn't appear to be a relationship with any of the other pairs, which explains with the model was unable to fit the data.  Pretty much all of the data is heavily left skewed.</p>
 
 </div>
 </div>
@@ -17815,12 +17815,10 @@ Once you have performed this implementation, the dataset will be stored in the v
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># For each feature find the data points with extreme high or low values</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-<span class="n">outliersList</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">log_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
     
     <span class="c1"># TODO: Calculate Q1 (25th percentile of the data) for the given feature</span>
@@ -17834,20 +17832,11 @@ Once you have performed this implementation, the dataset will be stored in the v
     <span class="c1"># TODO: Use the interquartile range to calculate an outlier step (1.5 times the interquartile range)</span>
     <span class="n">step</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="p">(</span><span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span><span class="p">)</span>
     <span class="c1">#print step</span>
-    <span class="n">outlier</span> <span class="o">=</span> <span class="n">log_data</span><span class="p">[</span><span class="o">~</span><span class="p">((</span><span class="n">log_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="n">step</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">log_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="n">step</span><span class="p">))]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">outlier</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">outliersList</span><span class="p">:</span>
-            <span class="n">outliersList</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">outliersList</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-
+    
     <span class="c1"># Display the outliers</span>
     <span class="k">print</span> <span class="s2">&quot;Data points considered outliers for the feature &#39;{}&#39;:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">log_data</span><span class="p">[</span><span class="o">~</span><span class="p">((</span><span class="n">log_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="n">step</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">log_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="n">step</span><span class="p">))])</span>
-<span class="k">print</span> <span class="n">outliersList</span>  
-<span class="k">print</span> <span class="s1">&#39;Outliers in more than one category:&#39;</span>
-<span class="k">print</span> <span class="p">{(</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outliersList</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
+    
 <span class="c1"># OPTIONAL: Select the indices for data points you wish to remove</span>
 <span class="n">outliers</span>  <span class="o">=</span> <span class="p">[]</span>
 
@@ -18481,15 +18470,6 @@ Once you have performed this implementation, the dataset will be stored in the v
 
 </div>
 
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Counter({154: 3, 128: 2, 65: 2, 66: 2, 75: 2, 193: 1, 264: 1, 137: 1, 142: 1, 145: 1, 412: 1, 285: 1, 161: 1, 420: 1, 38: 1, 171: 1, 429: 1, 175: 1, 304: 1, 305: 1, 439: 1, 184: 1, 57: 1, 187: 1, 203: 1, 325: 1, 289: 1, 81: 1, 338: 1, 86: 1, 343: 1, 218: 1, 95: 1, 96: 1, 353: 1, 98: 1, 355: 1, 356: 1, 357: 1, 233: 1, 109: 1, 183: 1})
-Outliers in more than one category:
-set([(65, 2), (75, 2), (154, 3), (128, 2), (66, 2)])
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -18510,7 +18490,7 @@ set([(65, 2), (75, 2), (154, 3), (128, 2), (66, 2)])
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Using a counter, I see that indices 65, 74, 154, 128, 66 are in more than one feature.  154 was in 3 categories. I chose to leave them in, as they still purchased a decent amount of multiple goods, it isn't like they solely purchased one good.</p>
+<p>Index 66 was an outlier for deli and grocery.  Same with 128.  I chose to leave them in, as they still purchased a decent amount of multiple goods, it isn't like they solely purchased one good.</p>
 
 </div>
 </div>
@@ -18946,7 +18926,7 @@ zKw/vh/eFsBqM/v0vCcT8oOQzgV8eVAfX/c9wGbn3Ngg6hduQj0PHvf/w1eObxz6/wRRt3AU6nlw
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>The first two principal components explain 0.4424 + 0.2766 = 0.719 or about 72% of the variance.  The first four components explain 0.9314 or 93% of the variance.  The first dimension mostly captures the relationship between Milk, grocery, Detergents, and a little bit with delicatessen via the large positive weights indicating something like a large retailer store..  The second one captures some correlation between all four, but mostly Fresh, Frozen, Deli via positive weights (larger for Fresh Frozen Deli).  This could something like a cafe.  The third captures the portion of deli and fresh that are inversely correlated, given that Fresh is largely positive and Deli is largely negative, while the the forth captures the inverse correlation of Frozen and Deli, with Frozen largely positive and Deli largely negative.</p>
+<p>The first two principal components explain 0.4424 + 0.2766 = 0.719 or about 72% of the variance.  The first four components explain 0.9314 or 93% of the variance.  The first dimension mostly captures the relationship between Milk, grocery, Detergents, and a little bit with delicatessen.  The second one captures some correlation between all four, but mostly Fresh, Frozen, Deli.  The third captures the portion of deli and fresh that are inversely correlated, while the the forth captures the inverse correlation of Frozen and Deli.</p>
 
 </div>
 </div>
@@ -21280,7 +21260,7 @@ RU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[56]:</div>
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Inverse transform the centers</span>
@@ -21298,9 +21278,6 @@ RU5ErkJggg==
 <span class="n">true_centers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">true_centers</span><span class="p">),</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <span class="n">true_centers</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">segments</span>
 <span class="n">display</span><span class="p">(</span><span class="n">true_centers</span><span class="p">)</span>
-
-<span class="n">display</span><span class="p">(</span><span class="n">true_centers</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">())</span>
-<span class="n">display</span><span class="p">(</span><span class="n">true_centers</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">())</span>
 </pre></div>
 
 </div>
@@ -21362,108 +21339,6 @@ RU5ErkJggg==
 
 </div>
 
-<div class="output_area"><div class="prompt"></div>
-
-<div class="output_html rendered_html output_subarea ">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Fresh</th>
-      <th>Milk</th>
-      <th>Grocery</th>
-      <th>Frozen</th>
-      <th>Detergents_Paper</th>
-      <th>Delicatessen</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Segment 0</th>
-      <td>-5953.0</td>
-      <td>745.0</td>
-      <td>1606.0</td>
-      <td>-1719.0</td>
-      <td>-51.0</td>
-      <td>-341.0</td>
-    </tr>
-    <tr>
-      <th>Segment 1</th>
-      <td>-2191.0</td>
-      <td>-3872.0</td>
-      <td>-5597.0</td>
-      <td>-856.0</td>
-      <td>-2595.0</td>
-      <td>-804.0</td>
-    </tr>
-    <tr>
-      <th>Segment 2</th>
-      <td>-9586.0</td>
-      <td>-3570.0</td>
-      <td>-4522.0</td>
-      <td>-2297.0</td>
-      <td>-2280.0</td>
-      <td>-1180.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-<div class="output_html rendered_html output_subarea ">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Fresh</th>
-      <th>Milk</th>
-      <th>Grocery</th>
-      <th>Frozen</th>
-      <th>Detergents_Paper</th>
-      <th>Delicatessen</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Segment 0</th>
-      <td>-2457.0</td>
-      <td>2914.0</td>
-      <td>4801.0</td>
-      <td>-173.0</td>
-      <td>2014.0</td>
-      <td>218.0</td>
-    </tr>
-    <tr>
-      <th>Segment 1</th>
-      <td>1305.0</td>
-      <td>-1703.0</td>
-      <td>-2402.0</td>
-      <td>690.0</td>
-      <td>-530.0</td>
-      <td>-245.0</td>
-    </tr>
-    <tr>
-      <th>Segment 2</th>
-      <td>-6090.0</td>
-      <td>-1401.0</td>
-      <td>-1327.0</td>
-      <td>-751.0</td>
-      <td>-215.0</td>
-      <td>-621.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -21485,9 +21360,9 @@ RU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Segment 0 looks like a big box store, focusing on having a wide array of most goods, with a deli sections, but with a ton of groceries, detergents and such, just a ton of everything.  It's center is above the mean in Milk and grovery, while being the above the median for things like Deli and Detergents.</p>
-<p>Segment 1 seems like a cafe, lots of Fresh and Frozen, but not much else (above the median in both).  Its centers are far away on all the other categories, particularly detergents and paper.</p>
-<p>Segment 2 appears to be more of a grocery store or corner store, with some grocery and milk, but not much else, goods that a family would be purchasing.  It's really far away from the median on everything, indicating that it just isn't purchasing as much as the other segments, implying lower customer volume (or small storefront).</p>
+<p>Segment 0 looks like a big box store, focusing on having a wide array of most goods, with a deli sections, but with a ton of groceries, detergents and such, just a ton of everything.
+Segment 1 seems like a cafe, lots of Fresh and Frozen, but not much else
+Segment 2 appears to be more of a grocery store, with some grocery and milk, but not much else, goods that a family would be purchasing.</p>
 
 </div>
 </div>
